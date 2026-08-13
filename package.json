@@ -1,0 +1,30 @@
+{
+  "name": "@p8labs/better-auth-crud",
+  "version": "0.1.0",
+  "description": "A Better Auth plugin for rapidly building authenticated CRUD APIs",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.0.0"
+  },
+  "devDependencies": {
+    "better-auth": "latest",
+    "typescript": "latest"
+  }
+}
