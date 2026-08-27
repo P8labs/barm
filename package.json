@@ -1,5 +1,5 @@
 {
-  "name": "@p8labs/better-auth-crud",
+  "name": "@p8labs/better-auth-resource-manager",
   "version": "0.1.0",
   "description": "A Better Auth plugin for rapidly building authenticated CRUD APIs",
   "type": "module",
@@ -10,6 +10,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js"
     }
   },
   "files": [
@@ -17,14 +21,18 @@
   ],
   "scripts": {
     "dev": "tsc --watch",
+    "proc": "pnpm build && cd testbench/ && pnpm i && cd ..",
     "build": "tsc",
+    "lint": "tsc --noEmit",
     "test": "bun test"
   },
   "peerDependencies": {
-    "better-auth": "^1.0.0"
+    "better-auth": "^1.0.0",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "better-auth": "latest",
+    "zod": "^4.0.0",
     "typescript": "latest"
   }
 }

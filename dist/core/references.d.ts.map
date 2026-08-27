@@ -1,0 +1,1 @@
+{"version":3,"file":"references.d.ts","sourceRoot":"","sources":["../../src/core/references.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,CAAC,EAAE,MAAM,KAAK,CAAC;AAGxB,MAAM,MAAM,iBAAiB,GAAG;IAC9B,KAAK,EAAE,MAAM,CAAC;IACd,QAAQ,EAAE,MAAM,CAAC;IACjB,cAAc,EAAE,MAAM,CAAC;CACxB,CAAC;AAEF,wBAAgB,qBAAqB,CAAC,MAAM,EAAE,CAAC,CAAC,OAAO,GAAG,iBAAiB,EAAE,CAmB5E"}
