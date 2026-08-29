@@ -94,5 +94,5 @@ if [[ "$PUSH" == true ]]; then
   git -C "$REPO_ROOT" push origin "$TAG"
   echo "Pushed branch and tag to origin"
 else
-  echo "Run: git push origin <branch> && git push origin $TAG"
+  echo "Run: git push origin master && git push origin $TAG"
 fi
