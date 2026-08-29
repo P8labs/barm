@@ -1,7 +1,7 @@
 {
-  "name": "@p8labs/better-auth-resource-manager",
-  "version": "0.1.0",
-  "description": "A Better Auth plugin for rapidly building authenticated CRUD APIs",
+  "name": "@p8labs/barm",
+  "version": "0.0.0",
+  "description": "A Better Auth plugin for rapidly building authenticated Resource Management APIs",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -21,14 +21,29 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
-    "dev": "tsc --watch",
-    "proc": "pnpm build && cd testbench/ && pnpm i && cd ..",
-    "build": "tsc",
-    "lint": "tsc --noEmit",
-    "test": "bun test"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/P8labs/barm.git",
+    "directory": "sdk/web"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Priyanshu Verma",
+    "email": "priyanshu@p8labs.in",
+    "url": "https://priyanshu.p8labs.in"
+  },
+  "homepage": "https://github.com/P8labs/barm#readme",
+  "bugs": {
+    "url": "https://github.com/P8labs/barm/issues"
   },
   "peerDependencies": {
     "better-auth": "^1.0.0",
@@ -36,7 +51,8 @@
   },
   "devDependencies": {
     "better-auth": "latest",
-    "zod": "^4.0.0",
-    "typescript": "latest"
+    "tsup": "^8.5.0",
+    "typescript": "5.7.3",
+    "zod": "^4.0.0"
   }
 }

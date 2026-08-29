@@ -3,16 +3,16 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
-    "module": "nodenext",
-    "target": "esnext",
-    "types": [],
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
 
-    "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-
+    "esModuleInterop": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
 
     "strict": true,
     "verbatimModuleSyntax": true,
@@ -21,13 +21,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "testbench",
-    "tests",
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["testbench", "tests", "node_modules", "dist"]
 }
