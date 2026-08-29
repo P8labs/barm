@@ -2,26 +2,20 @@ import { z } from "zod";
 import type {
   BooleanSchema,
   DateSchema,
-  InputMode,
   NumberSchema,
   SchemaMetadata,
   StringSchema,
   AutofillMode,
 } from "./types.js";
-
-const metadataStore = new WeakMap<z.ZodType, SchemaMetadata>();
-
-export function getSchemaMetadata(schema: z.ZodType): SchemaMetadata {
-  return metadataStore.get(schema) ?? {};
-}
+import { getSchemaMetadata, setSchemaMetadata } from "./meta.js";
 
 function withMetadata<T extends z.ZodType>(
   schema: T,
   metadata: SchemaMetadata,
 ): T {
-  const current = metadataStore.get(schema) ?? {};
+  const current = getSchemaMetadata(schema);
 
-  metadataStore.set(schema, {
+  setSchemaMetadata(schema, {
     ...current,
     ...metadata,
   });
@@ -36,12 +30,6 @@ export const schema = {
     const value = z.string();
 
     return Object.assign(value, {
-      input(mode: InputMode) {
-        return withMetadata(value, {
-          input: mode,
-        });
-      },
-
       primaryKey() {
         return withMetadata(value, {
           primaryKey: true,
@@ -101,12 +89,6 @@ export const schema = {
     const value = z.number();
 
     return Object.assign(value, {
-      input(mode: InputMode) {
-        return withMetadata(value, {
-          input: mode,
-        });
-      },
-
       unique() {
         return withMetadata(value, {
           unique: true,
@@ -143,12 +125,6 @@ export const schema = {
     const value = z.boolean();
 
     return Object.assign(value, {
-      input(mode: InputMode) {
-        return withMetadata(value, {
-          input: mode,
-        });
-      },
-
       index() {
         return withMetadata(value, {
           index: true,
@@ -179,12 +155,6 @@ export const schema = {
     const value = z.date();
 
     return Object.assign(value, {
-      input(mode: InputMode) {
-        return withMetadata(value, {
-          input: mode,
-        });
-      },
-
       index() {
         return withMetadata(value, {
           index: true,

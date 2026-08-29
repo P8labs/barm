@@ -4,10 +4,9 @@ import type {
   ResourceOperation,
   ResourceOptions,
 } from "./types.js";
-import { createAuthEndpoint } from "better-auth/api";
-import { toBetterAuthSchema } from "./schema/converter.js";
+import { createAuthEndpoint, sessionMiddleware } from "better-auth/api";
+import { toBetterAuthSchema } from "./converter.js";
 import { capitalize, getPagination } from "./utils.js";
-import { endpointDefinitions } from "./core/endpoints.js";
 import {
   createResource,
   deleteResource,
@@ -15,6 +14,38 @@ import {
   listResource,
   updateResource,
 } from "./operations/index.js";
+
+type EndpointDefinition = {
+  method: "GET" | "POST" | "PATCH" | "DELETE";
+  path: (name: string) => string;
+};
+
+const endpointDefinitions: Record<ResourceOperation, EndpointDefinition> = {
+  list: {
+    method: "GET",
+    path: (name) => `/resource/${name}`,
+  },
+
+  get: {
+    method: "GET",
+    path: (name) => `/resource/${name}/:id`,
+  },
+
+  create: {
+    method: "POST",
+    path: (name) => `/resource/${name}`,
+  },
+
+  update: {
+    method: "POST",
+    path: (name) => `/resource/${name}/:id`,
+  },
+
+  delete: {
+    method: "DELETE",
+    path: (name) => `/resource/${name}/:id`,
+  },
+};
 
 export function resourceManager<
   TResources extends Record<string, ResourceManagerConstraint>,
@@ -45,6 +76,7 @@ export function resourceManager<
         definition.path(name),
         {
           method: definition.method,
+          use: [sessionMiddleware],
         },
         async (ctx) => {
           let result;
@@ -71,8 +103,20 @@ export function resourceManager<
               break;
           }
 
-          return ctx.json(result.data, {
-            status: result.status,
+          if (result.status >= 400) {
+            return ctx.error("BAD_REQUEST", {
+              message: result?.error || "An error occurred",
+            });
+          }
+
+          if (result.status == 200 || result.status == 201) {
+            return ctx.json(result.data, {
+              status: result.status,
+            });
+          }
+
+          return ctx.error("INTERNAL_SERVER_ERROR", {
+            message: result?.error || "An error occurred",
           });
         },
       );

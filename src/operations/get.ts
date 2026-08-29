@@ -8,9 +8,8 @@ export async function getResource(
 
   if (!id) {
     return {
-      data: {
-        error: "Missing resource id",
-      },
+      data: {},
+      error: "Missing resource id",
       status: 400,
     };
   }
@@ -29,6 +28,7 @@ export async function getResource(
   if (!record) {
     return {
       data: null,
+      error: `Resource "${resource}" with id "${id}" not found`,
       status: 404,
     };
   }

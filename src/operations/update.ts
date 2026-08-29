@@ -1,5 +1,36 @@
-import { validateUpdate } from "../schema/validation.js";
-import type { ResourceEndpointContext, ResourceManagerConstraint, ResourceResult } from "./../types.js";
+import { z } from "zod";
+import type {
+  ResourceEndpointContext,
+  ResourceManagerConstraint,
+  ResourceResult,
+} from "../types.js";
+import { getBody } from "../utils.js";
+import { getSchemaMetadata } from "../resource/schema/meta.js";
+
+function applyUpdateDefaults(
+  schema: z.ZodObject,
+  data: Record<string, unknown>,
+): Record<string, unknown> {
+  const result = {
+    ...data,
+  };
+
+  for (const [fieldName, field] of Object.entries(
+    schema.shape as Record<string, z.ZodType>,
+  )) {
+    const metadata = getSchemaMetadata(field);
+
+    if (
+      metadata.autofill &&
+      (metadata.autofill.mode === "update" ||
+        metadata.autofill.mode === "createOrUpdate")
+    ) {
+      result[fieldName] = metadata.autofill.generate();
+    }
+  }
+
+  return result;
+}
 
 export async function updateResource(
   ctx: ResourceEndpointContext,
@@ -10,22 +41,28 @@ export async function updateResource(
 
   if (!id) {
     return {
-      data: {
-        error: "Missing resource id",
-      },
+      data: {},
+      error: "Missing resource id",
       status: 400,
     };
   }
 
+  const body = getBody(ctx.body);
 
-const result = validateUpdate(resource.schema, ctx.body);
+  if (!(resource.schema instanceof z.ZodObject)) {
+    throw new Error(`Resource "${name}" must use schema.object(...)`);
+  }
+
+  const data = applyUpdateDefaults(resource.schema, body);
+
+  const result = resource.schema.partial().safeParse(data);
 
   if (!result.success) {
     return {
       data: {
-        error: "Invalid input",
         issues: result.error.issues,
       },
+      error: "Invalid input",
       status: 400,
     };
   }

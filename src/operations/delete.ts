@@ -8,9 +8,8 @@ export async function deleteResource(
 
   if (!id) {
     return {
-      data: {
-        error: "Missing resource id",
-      },
+      data: {},
+      error: "Missing resource id",
       status: 400,
     };
   }

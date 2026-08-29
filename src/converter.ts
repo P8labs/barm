@@ -1,18 +1,18 @@
 import { z } from "zod";
 import type {
-  BetterAuthPlugin,
+  BetterAuthPluginDBSchema,
   DBFieldAttribute,
   DBFieldType,
 } from "better-auth";
-import type { SchemaMetadata } from "./types.js";
-import { getSchemaMetadata } from "./metadata.js";
+import { getSchemaMetadata } from "./resource/schema/meta.js";
 
-type BetterAuthSchema = NonNullable<BetterAuthPlugin["schema"]>;
+type BetterAuthSchema = BetterAuthPluginDBSchema;
 
 type ResourceWithSchema = {
   schema: z.ZodType;
 };
 
+// zod field to better-auth field type mapping
 function getFieldType(field: z.ZodType): DBFieldType {
   if (field instanceof z.ZodString) {
     return "string";
@@ -33,6 +33,7 @@ function getFieldType(field: z.ZodType): DBFieldType {
   throw new Error(`Unsupported schema type: ${field.constructor.name}`);
 }
 
+// Convert a zod field to a better-auth field schema
 function toFieldSchema(field: z.ZodType): DBFieldAttribute {
   const metadata = getSchemaMetadata(field);
 
@@ -48,6 +49,7 @@ function toFieldSchema(field: z.ZodType): DBFieldAttribute {
     result.references = {
       model: metadata.references.resource,
       field: metadata.references.field,
+      onDelete: "cascade", // for now default
     };
   }
 
@@ -59,7 +61,7 @@ function toResourceSchema(resource: ResourceWithSchema, name: string) {
     throw new Error(`Resource "${name}" must use schema.object(...)`);
   }
 
-  const fields: Record<string, ReturnType<typeof toFieldSchema>> = {};
+  const fields: Record<string, DBFieldAttribute> = {};
 
   for (const [fieldName, field] of Object.entries(resource.schema.shape)) {
     fields[fieldName] = toFieldSchema(field);

@@ -1,14 +1,11 @@
 import type { ZodType } from "zod";
 import type { Resource, ResourceAccess } from "./types.js";
+export { schema } from "./schema/index.js";
 
-export type CrudResourceOptions<TSchema extends ZodType> = {
+export function resource<TSchema extends ZodType>(options: {
   schema: TSchema;
   access?: ResourceAccess<TSchema["_output"], TSchema["_input"]>;
-};
-
-export function resource<TSchema extends ZodType>(
-  options: CrudResourceOptions<TSchema>,
-): Resource<TSchema> {
+}): Resource<TSchema> {
   return Object.freeze({
     schema: options.schema,
     ...(options.access !== undefined

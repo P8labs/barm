@@ -396,10 +396,6 @@ export default function TodoList({ userId }: { userId: string }) {
       const { data, error } = await authClient.resourceManager.todo.create({
         completed: false,
         title: optimisticTodo.title,
-        createdAt: optimisticTodo.createdAt,
-        id: optimisticTodo.id,
-        updatedAt: optimisticTodo.updatedAt,
-        userId: optimisticTodo.userId,
       });
 
       if (!error && data) {
@@ -437,11 +433,7 @@ export default function TodoList({ userId }: { userId: string }) {
         id,
         data: {
           completed: !completed,
-          createdAt: new Date(),
-          updatedAt: new Date(),
           title: todos.find((todo) => todo.id === id)?.title || "",
-          userId: todos.find((todo) => todo.id === id)?.userId || "",
-          id: id,
         },
       });
 
@@ -577,11 +569,7 @@ export default function TodoList({ userId }: { userId: string }) {
           id: activeId,
           data: {
             completed: overTodo.completed,
-            createdAt: new Date(),
-            updatedAt: new Date(),
             title: activeTodo.title,
-            userId: activeTodo.userId,
-            id: activeTodo.id,
           },
         });
       }
@@ -639,15 +627,11 @@ export default function TodoList({ userId }: { userId: string }) {
 
     setIsSyncing(true);
     try {
-      const { data, error } = await authClient.resourceManager.todo.update({
+      const {  error } = await authClient.resourceManager.todo.update({
         id,
         data: {
           title: trimmedTitle,
           completed: originalTodo.completed,
-          createdAt: originalTodo.createdAt,
-          updatedAt: new Date(),
-          userId: originalTodo.userId,
-          id: originalTodo.id,
         },
       });
 
