@@ -1,6 +1,6 @@
 {
   "name": "@p8labs/barm",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A Better Auth plugin for rapidly building authenticated Resource Management APIs",
   "type": "module",
   "main": "./dist/index.js",
